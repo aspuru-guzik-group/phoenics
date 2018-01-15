@@ -1,0 +1,10 @@
+{
+	"general": {
+		"num_batches": 1,
+		"batch_size": 3,
+		"max_evals": 1000,
+		"submission_log": "submitted_sets.pkl",
+		"evaluation_log": "evaluated_sets.pkl"
+	},
+	"variables": [{"param0": { "low": 0.0,  "high": 1.0,  "type": "float",  "size": 1} }, {"param1": { "low": 0.0,  "high": 1.0,  "type": "float",  "size": 1} }]
+}
