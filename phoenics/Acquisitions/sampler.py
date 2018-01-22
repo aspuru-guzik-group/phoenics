@@ -18,10 +18,10 @@ class AcquisitionFunctionSampler(VarDictParser):
 	def __init__(self, var_infos, var_dicts):
 		VarDictParser.__init__(self, var_dicts)
 
-#		self.var_infos = var_infos
-#		for key, value in self.var_infos.items():
-#			setattr(self, str(key), value)
-#		self.total_size = np.sum(self.var_sizes)
+		self.var_infos = var_infos
+		for key, value in self.var_infos.items():
+			setattr(self, str(key), value)
+		self.total_size = np.sum(self.var_sizes)
 
 		self.random_number_generator = RandomNumberGenerator()
 
@@ -62,7 +62,9 @@ class AcquisitionFunctionSampler(VarDictParser):
 		# get uniform samples first
 		uniform_samples = []
 		for var_index, full_var_dict in enumerate(self.var_dicts):
+			print('FULL', full_var_dict)
 			var_dict = full_var_dict[self.var_names[var_index]]
+			print('VAR_DICT', var_dict)
 			sampled_values = self.random_number_generator.generate(var_dict, size = (self.var_sizes[var_index], self.total_size * num_samples))
 			uniform_samples.extend(sampled_values)
 		uniform_samples = np.array(uniform_samples).transpose()
@@ -73,7 +75,7 @@ class AcquisitionFunctionSampler(VarDictParser):
 
 
 
-	def _proposal_optimization_thread(self, batch_index, queue):
+	def _proposal_optimization_thread(self, batch_index, queue = None):
 		print('starting process for ', batch_index)
 		# prepare penalty function
 		def penalty(x):
@@ -94,33 +96,41 @@ class AcquisitionFunctionSampler(VarDictParser):
 				optimized.append(res.x)
 		optimized = np.array(optimized)
 
-		queue.put({batch_index: optimized})
 		print('finished process for ', batch_index)
+		if queue:
+			queue.put({batch_index: optimized})
+		else:
+			return optimized
 
 
 
-	def _optimize_proposals(self, proposals):
+	def _optimize_proposals(self, proposals, parallel):
 		self.proposals = proposals
-
-		q = Queue()
-		processes = []
-		for batch_index in range(len(self.lambda_values)):
-			process = Process(target = self._proposal_optimization_thread, args = (batch_index, q))
-			processes.append(process)
-			process.start()
-
-#		import time
-#		time.sleep(10)
-
-		for process_index, process in enumerate(processes):
-			process.join()
-
-
 		result_dict = {}
-		while not q.empty():
-			results = q.get()
-			for key, value in results.items():
-				result_dict[key] = value
+			
+		if parallel == 'True':
+			q = Queue()
+			processes = []
+			for batch_index in range(len(self.lambda_values)):
+				process = Process(target = self._proposal_optimization_thread, args = (batch_index, q))
+				processes.append(process)
+				process.start()
+
+			for process_index, process in enumerate(processes):
+				process.join()
+
+			while not q.empty():
+				results = q.get()
+				for key, value in results.items():
+					result_dict[key] = value
+
+		elif parallel == 'False':
+			for batch_index in range(len(self.lambda_values)):
+				result_dict[batch_index] = self._proposal_optimization_thread(batch_index)
+
+		else:
+			raise NotImplementedError()
+
 
 		samples = [result_dict[batch_index] for batch_index in range(len(self.lambda_values))]
 		return np.array(samples)
@@ -128,7 +138,7 @@ class AcquisitionFunctionSampler(VarDictParser):
 
 
 
-	def sample(self, current_best, penalty_contributions, lambda_values, num_samples = 200):
+	def sample(self, current_best, penalty_contributions, lambda_values, num_samples = 200, parallel = True):
 
 		self.penalty_contributions = penalty_contributions
 		self.lambda_values         = lambda_values
@@ -136,7 +146,7 @@ class AcquisitionFunctionSampler(VarDictParser):
 		# FIXME samples are not yet optimized!
 		proposals = self._get_random_proposals(current_best, num_samples)
 		print('# ... optimizing')
-		proposals = self._optimize_proposals(proposals)
+		proposals = self._optimize_proposals(proposals, parallel)
 		return proposals
 
 #========================================================================

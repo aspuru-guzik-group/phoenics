@@ -79,11 +79,12 @@ class Phoenics(VarDictParser):
 
 		# sample the acquisition function
 		print('# proposing new samples')
-		self.proposed_samples = self.acq_func_sampler.sample(lowest_params, self.network.penalty_contributions, self.network.lambda_values)
+		self.proposed_samples = self.acq_func_sampler.sample(lowest_params, self.network.penalty_contributions, self.network.lambda_values, parallel = self.param_dict['general']['parallel_evaluations'])
 
 
 
 	def choose(self, num_samples = None, observations = None, as_array = False):
+
 		if not num_samples:
 			num_samples = self.param_dict['general']['num_batches']
 
