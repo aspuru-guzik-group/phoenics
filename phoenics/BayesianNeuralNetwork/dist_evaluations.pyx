@@ -63,7 +63,7 @@ cdef class DistEvaluator:
 		cdef double [:] var_types = self.np_var_types
 
 		cdef double [:] probs = self.np_probs
-		for obs_index in range(self.num_dim):
+		for obs_index in range(self.num_obs):
 			probs[obs_index] = 0.
 
 
@@ -71,8 +71,8 @@ cdef class DistEvaluator:
 			for obs_index in range(self.num_obs):
 				total_prob = 1.
 				for dim_index in range(self.num_dim):
-					if var_types[dim_index] == 0:
-						total_prob *= _gauss(x[dim_index], mus[sample_index, obs_index, dim_index], sds[sample_index, obs_index, dim_index])
+#					if var_types[dim_index] == 0:
+					total_prob *= _gauss(x[dim_index], mus[sample_index, obs_index, dim_index], sds[sample_index, obs_index, dim_index])
 				probs[obs_index] += total_prob
 		
 		for obs_index in range(self.num_obs):

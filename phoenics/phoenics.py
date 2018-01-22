@@ -5,13 +5,15 @@ __author__ = 'Florian Hase'
 #========================================================================
 
 import numpy as np 
+import os, sys, copy
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from Acquisitions.sampler                          import AcquisitionFunctionSampler
-from BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
-from ObservationParser.observation_parser          import ObservationParser
-from RandomNumberGenerator.random_number_generator import RandomNumberGenerator
-from SampleSelector.sample_selector                import SampleSelector
-from Utils.utils import ParserJSON, VarDictParser
+from .Acquisitions.sampler                          import AcquisitionFunctionSampler
+from .BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
+from .ObservationParser.observation_parser          import ObservationParser
+from .RandomNumberGenerator.random_number_generator import RandomNumberGenerator
+from .SampleSelector.sample_selector                import SampleSelector
+from .Utils.utils import ParserJSON, VarDictParser
 
 #========================================================================
 
@@ -81,7 +83,7 @@ class Phoenics(VarDictParser):
 
 
 
-	def choose(self, num_samples = None, observations = None):
+	def choose(self, num_samples = None, observations = None, as_array = False):
 		if not num_samples:
 			num_samples = self.param_dict['general']['num_batches']
 
@@ -96,8 +98,24 @@ class Phoenics(VarDictParser):
 			self._generate_uniform(num_samples)
 			# cleaning samples - not required for uniform samples
 			self.imp_samples = self.proposed_samples
-		return self.imp_samples
 
+		# convert sampled parameters to list of dicts
+		self.gen_samples = []
+		for sample in self.imp_samples:
+			sample_dict = {}
+			lower, upper = 0, self.var_sizes[0]
+			for var_index, var_name in enumerate(self.var_names):
+				sample_dict[var_name] = {'samples': sample[lower:upper]}
+				if var_index == len(self.var_names) - 1:
+					break
+				lower = upper
+				upper += self.var_sizes[var_index + 1]
+			self.gen_samples.append(copy.deepcopy(sample_dict))
+
+		if as_array:
+			return self.imp_samples
+		else:
+			return self.gen_samples
 
 #========================================================================
 

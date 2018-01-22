@@ -18,42 +18,42 @@ class AcquisitionFunctionSampler(VarDictParser):
 	def __init__(self, var_infos, var_dicts):
 		VarDictParser.__init__(self, var_dicts)
 
-		self.var_infos = var_infos
-		for key, value in self.var_infos.items():
-			setattr(self, str(key), value)
-		self.total_size = np.sum(self.var_sizes)
+#		self.var_infos = var_infos
+#		for key, value in self.var_infos.items():
+#			setattr(self, str(key), value)
+#		self.total_size = np.sum(self.var_sizes)
 
 		self.random_number_generator = RandomNumberGenerator()
 
 
 
-	def _get_perturbed_samples(self, scale, current_best, num_samples):
-		start_index = 0
-		perturbed_samples = []
-		for var_index, full_var_dict in enumerate(self.var_dicts):
-			var_dict = full_var_dict[self.var_names[var_index]]
-
-			# first we generate the perturbations
-			var_dict['loc']   = (var_dict['high'] + var_dict['low']) / 2.
-			var_dict['scale'] = (var_dict['high'] - var_dict['low']) * scale
-			sampled_values = self.random_number_generator.generate(var_dict, size = (self.var_sizes[var_index], self.total_size * num_samples), kind = 'normal')
-			
-			# then we generate the samples
-			relevant_current_best = current_best[start_index : start_index + var_dict['size']]
-			sampled_values += relevant_current_best
-
-			# then we make sure that we didn't leave the domain
-			domain_sampled_values = []
-			for sample in sampled_values:
-				sample = np.abs(sample - var_dict['low']) + var_dict['low']
-				sample = var_dict['high'] - np.abs(var_dict['high'] - sample)
-				if np.all(sample > var_dict['low']) and np.all(sample < var_dict['high']):
-					domain_sampled_values.append(sample)
-
-			# and finally store the generated samples
-			perturbed_samples.extend(domain_sampled_values)
-			start_index += var_dict['size']
-		return np.array(perturbed_samples).transpose()
+#	def _get_perturbed_samples(self, scale, current_best, num_samples):
+#		start_index = 0
+#		perturbed_samples = []
+#		for var_index, full_var_dict in enumerate(self.var_dicts):
+#			var_dict = full_var_dict[self.var_names[var_index]]
+#
+#			# first we generate the perturbations
+#			var_dict['loc']   = (var_dict['high'] + var_dict['low']) / 2.
+#			var_dict['scale'] = (var_dict['high'] - var_dict['low']) * scale
+#			sampled_values = self.random_number_generator.generate(var_dict, size = (self.var_sizes[var_index], self.total_size * num_samples), kind = 'normal')
+#			
+#			# then we generate the samples
+#			relevant_current_best = current_best[start_index : start_index + var_dict['size']]
+#			sampled_values += relevant_current_best
+#
+#			# then we make sure that we didn't leave the domain
+#			domain_sampled_values = []
+#			for sample in sampled_values:
+#				sample = np.abs(sample - var_dict['low']) + var_dict['low']
+#				sample = var_dict['high'] - np.abs(var_dict['high'] - sample)
+#				if np.all(sample > var_dict['low']) and np.all(sample < var_dict['high']):
+#					domain_sampled_values.append(sample)
+#
+#			# and finally store the generated samples
+#			perturbed_samples.extend(domain_sampled_values)
+#			start_index += var_dict['size']
+#		return np.array(perturbed_samples).transpose()
 
 
 
@@ -88,12 +88,11 @@ class AcquisitionFunctionSampler(VarDictParser):
 			res = minimize(penalty, sample, method = 'L-BFGS-B', options = {'maxiter': 25})
 
 			# FIXME
-			if np.any(res.x < self.var_lows) or np.any(res.x > self.var_highs):
+			if np.any(res.x < self.var_p_lows) or np.any(res.x > self.var_p_highs):
 				optimized.append(sample)
 			else:
 				optimized.append(res.x)
 		optimized = np.array(optimized)
-		optimized[:, self._ints] = np.around(optimized[:, self._ints])
 
 		queue.put({batch_index: optimized})
 		print('finished process for ', batch_index)
@@ -110,8 +109,12 @@ class AcquisitionFunctionSampler(VarDictParser):
 			processes.append(process)
 			process.start()
 
+#		import time
+#		time.sleep(10)
+
 		for process_index, process in enumerate(processes):
 			process.join()
+
 
 		result_dict = {}
 		while not q.empty():

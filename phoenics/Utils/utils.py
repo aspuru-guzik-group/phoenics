@@ -44,8 +44,6 @@ class VarDictParser(object):
 		self._store_all_infos()
 		# learn types of each variable
 		self._store_variable_types()
-		# get infos broken up by variable type
-		self._store_type_specific_infos()
 
 
 	def _store_all_infos(self):
@@ -103,18 +101,10 @@ class VarDictParser(object):
 				raise NotImplementedError()
 
 
-
-	def _store_type_specific_infos(self):
-		float_dict = {}
-		for attr, values in self.var_infos.items():
-			float_dict[attr] = values[self._floats]
-		self.var_p_infos_floats = float_dict
-
 #=======================================================================
 
 
 if __name__ == '__main__':
 	parser = ParserJSON('config.txt')
 	parser.parse()
-	print(parser.param_dict)
 	quit()

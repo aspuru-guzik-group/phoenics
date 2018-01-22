@@ -11,7 +11,6 @@ import numpy as np
 import pymc3 as pm 
 
 from Utils.utils import VarDictParser
-from BayesianNeuralNetwork.distributions import DiscreteLaplace
 
 #========================================================================
 
@@ -116,6 +115,8 @@ class Pymc3Network(VarDictParser):
 		if not num_draws:  num_draws  = self.num_draws
 
 		with self.model:
-			approx     = pm.fit(n = num_epochs, obj_optimizer = pm.adam(learning_rate = self.learning_rate))
-			self.trace = approx.sample(draws = num_draws)
+			self.trace = pm.sample(draws = num_draws)
+
+#			approx     = pm.fit(n = num_epochs, obj_optimizer = pm.adam(learning_rate = self.learning_rate))
+#			self.trace = approx.sample(draws = num_draws)
 
