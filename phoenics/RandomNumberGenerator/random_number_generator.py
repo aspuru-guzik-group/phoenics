@@ -18,7 +18,6 @@ class RandomNumberGenerator(object):
 		return np.random.normal(loc = var_dict['loc'], scale = var_dict['scale'], size = size)
 
 	def _uniform_float(self, var_dict, size):
-		print(size, size.__class__.__name__)
 		return np.random.uniform(low = var_dict['low'], high = var_dict['high'], size = size)
 
 

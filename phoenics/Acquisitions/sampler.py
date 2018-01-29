@@ -62,9 +62,7 @@ class AcquisitionFunctionSampler(VarDictParser):
 		# get uniform samples first
 		uniform_samples = []
 		for var_index, full_var_dict in enumerate(self.var_dicts):
-			print('FULL', full_var_dict)
 			var_dict = full_var_dict[self.var_names[var_index]]
-			print('VAR_DICT', var_dict)
 			sampled_values = self.random_number_generator.generate(var_dict, size = (self.var_sizes[var_index], self.total_size * num_samples))
 			uniform_samples.extend(sampled_values)
 		uniform_samples = np.array(uniform_samples).transpose()

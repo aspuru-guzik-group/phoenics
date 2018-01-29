@@ -8,12 +8,12 @@ import numpy as np
 import os, sys, copy
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from .Acquisitions.sampler                          import AcquisitionFunctionSampler
-from .BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
-from .ObservationParser.observation_parser          import ObservationParser
-from .RandomNumberGenerator.random_number_generator import RandomNumberGenerator
-from .SampleSelector.sample_selector                import SampleSelector
-from .Utils.utils import ParserJSON, VarDictParser
+from Acquisitions.sampler                          import AcquisitionFunctionSampler
+from BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
+from ObservationParser.observation_parser          import ObservationParser
+from RandomNumberGenerator.random_number_generator import RandomNumberGenerator
+from SampleSelector.sample_selector                import SampleSelector
+from Utils.utils import ParserJSON, VarDictParser
 
 #========================================================================
 
@@ -99,6 +99,9 @@ class Phoenics(VarDictParser):
 			self._generate_uniform(num_samples)
 			# cleaning samples - not required for uniform samples
 			self.imp_samples = self.proposed_samples
+
+		if len(self.imp_samples.shape) > 2:
+			self.imp_samples = np.squeeze(self.imp_samples)
 
 		# convert sampled parameters to list of dicts
 		self.gen_samples = []
