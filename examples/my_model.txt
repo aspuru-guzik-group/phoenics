@@ -1,0 +1,8 @@
+{
+	"general": {
+		"num_batches": 1,
+		"batch_size": 3,
+		"parallel_evaluations": "False"
+	},
+	"variables": [{"param0": { "low": -3.0,  "high": 3.0,   "type": "float",  "size": 1} } ]
+}
