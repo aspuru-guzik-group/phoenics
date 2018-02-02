@@ -19,7 +19,7 @@ from BayesianNeuralNetwork.dist_evaluations import DistEvaluator
 
 class BayesianNeuralNetwork(VarDictParser):
 
-	MODEL_DETAILS = {'burnin': 100, 'thinning': 10, 'num_epochs': 10**5, 'num_draws': 10**3, 'learning_rate': 0.01,
+	MODEL_DETAILS = {'burnin': 1000, 'thinning': 100, 'num_epochs': 10**5, 'num_draws': 10**4, 'learning_rate': 0.01,
 					 'num_layers': 3, 'hidden_shape': 6,
 					 'weight_loc': 0., 'weight_scale': 1., 'bias_loc': 0., 'bias_scale': 1.}
 

@@ -105,7 +105,7 @@ class Pymc3Network(VarDictParser):
 
 			# learn the floats
 			self.loc        = pm.Deterministic('loc', (self.upper_rescalings - self.lower_rescalings) * self._loc + self.lower_rescalings)
-			self.out_floats = pm.Normal('out_floats', self.loc[:, self._floats], tau = self.tau[:, self._floats], observed = self.observed_params[:, self._floats])
+			self.out_floats = pm.Normal('out_floats', self.loc, tau = self.tau, observed = self.observed_params)
 
 
 
@@ -115,8 +115,8 @@ class Pymc3Network(VarDictParser):
 		if not num_draws:  num_draws  = self.num_draws
 
 		with self.model:
-			self.trace = pm.sample(draws = num_draws)
+#			self.trace = pm.sample(draws = num_draws)
 
-#			approx     = pm.fit(n = num_epochs, obj_optimizer = pm.adam(learning_rate = self.learning_rate))
-#			self.trace = approx.sample(draws = num_draws)
+			approx     = pm.fit(n = num_epochs, obj_optimizer = pm.adam(learning_rate = self.learning_rate))
+			self.trace = approx.sample(draws = num_draws)
 

@@ -13,7 +13,8 @@ from BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
 from ObservationParser.observation_parser          import ObservationParser
 from RandomNumberGenerator.random_number_generator import RandomNumberGenerator
 from SampleSelector.sample_selector                import SampleSelector
-from Utils.utils import ParserJSON, VarDictParser
+from Utils.optimization_results                    import OptimizeResult
+from Utils.utils                                   import ParserJSON, VarDictParser
 
 #========================================================================
 
@@ -102,6 +103,8 @@ class Phoenics(VarDictParser):
 
 		if len(self.imp_samples.shape) > 2:
 			self.imp_samples = np.squeeze(self.imp_samples)
+		if len(self.imp_samples.shape) == 1:
+			self.imp_samples = np.reshape(self.imp_samples, (len(self.imp_samples), 1))
 
 		# convert sampled parameters to list of dicts
 		self.gen_samples = []
@@ -120,6 +123,65 @@ class Phoenics(VarDictParser):
 			return self.imp_samples
 		else:
 			return self.gen_samples
+
+
+
+
+
+
+	def minimize(self, fun, x0 = None, max_iter = 2, options = {}):
+		# wrapper for phoenics
+		result = OptimizeResult()
+
+		if x0:
+			value = fun(x0)
+			result.add(x0, value)
+		else:
+			x0 = self.choose(num_samples = 1)
+			# convert list of dicts to array
+			samples = []
+			for param_dict in x0:
+				sample = []
+				for var_name in self.var_names:
+					sample.extend(param_dict[var_name]['samples'])		
+				samples.append(sample)
+			samples = np.array(samples)
+
+			# evaluate and append to result
+			for sample_index, sample in enumerate(samples):
+				value = fun(np.squeeze(sample))
+				x0[sample_index]['loss'] = value
+				result.add(sample, value)
+
+
+		print(x0)
+
+		for num_iter in range(1, max_iter):
+
+			# at each iteration, run phoenics with the most recent observations
+			x_new = self.choose(observations = x0)
+
+			# add points to results object
+			samples = []
+			for param_dict in x_new:
+				sample = [] 
+				for var_name in self.var_names:
+					sample.extend(param_dict[var_name]['samples'])
+				samples.append(sample)
+			samples = np.array(samples)
+
+			# evaluate the new points
+			for sample_index, sample in enumerate(samples):
+				value = fun(np.squeeze(sample))
+				x_new[sample_index]['loss'] = value 
+				result.add(sample, value)
+
+			# append new points
+			x0.extend(copy.deepcopy(x_new))
+
+		result.analyze()
+
+		return result
 
 #========================================================================
 
