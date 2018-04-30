@@ -1,11 +1,9 @@
 # Phoenics
 
-Phoenics is an open source optimization algorithm combining ideas from Bayesian optimization with Bayesian Kernel Density estimation. 
+Phoenics is an open source optimization algorithm combining ideas from Bayesian optimization with Bayesian Kernel Density estimation [1]. It performs global optimization on expensive to evaluate objectives, such as physical experiments or demanding computations. Phoenics supports sequential and batch optimizations and allows for the simultaneous optimization of multiple objectives [2].
 
 
-
-
-Note: This repository is under construction! We hope to add details on the method, instructions for how to use it and short tutorials in the near future. 
+Note: This repository is under construction! We hope to add futther details on the method, instructions and more examples in the near future. 
 
 ### References
 
