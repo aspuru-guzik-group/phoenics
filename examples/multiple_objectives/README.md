@@ -1,3 +1,3 @@
-# Simple optimization
+# Multi-objective optimization
 
-This example illustrates how Phoenics can be used for the sequential optimization of a single objective function. We consider the Branin function for this illustration. Parameters for the optimization procedure are provided in the config.json file. Call optimize_branin.py to execute the optimization procedure. 
+This example illustrates a multi-objective optimization using Phoenics<sup>[1]</sup> in combination with Chimera<sup>[2]</sup>. We consider the Fonseca benchmark set in this example. Parameters for the optimization procedure as well as details about the objectives to optimize are provided in the config.json file. Call optimize_multi_objective.py to execute the optimization procedure. 
