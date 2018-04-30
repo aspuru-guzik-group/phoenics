@@ -13,19 +13,18 @@ from BayesianNeuralNetwork.bayesian_neural_network import BayesianNeuralNetwork
 from ObservationParser.observation_parser          import ObservationParser
 from RandomNumberGenerator.random_number_generator import RandomNumberGenerator
 from SampleSelector.sample_selector                import SampleSelector
-from Utils.optimization_results                    import OptimizeResult
-from Utils.utils                                   import ParserJSON, VarDictParser
+from Utils.utils import ParserJSON, VarDictParser, ObsDictParser
 
 #========================================================================
 
-class Phoenics(VarDictParser):
+class Phoenics(VarDictParser, ObsDictParser):
 
 
 	def __init__(self, config_file = None):
 
 		self._parse_config_file(config_file)
 
-		self.observation_parser      = ObservationParser(self.param_dict['variables'])
+		self.observation_parser      = ObservationParser(self.param_dict['variables'], self.param_dict['objectives'])
 		self.acq_func_sampler        = AcquisitionFunctionSampler(self.var_infos, self.param_dict['variables'])
 		self.random_number_generator = RandomNumberGenerator()
 		self.sample_selector         = SampleSelector(self.param_dict['variables'])
@@ -39,6 +38,7 @@ class Phoenics(VarDictParser):
 		self.json_parser.parse()
 		self.param_dict = self.json_parser.param_dict
 		VarDictParser.__init__(self, self.param_dict['variables'])
+		ObsDictParser.__init__(self, self.param_dict['objectives'])
 
 
 	def _generate_uniform(self, num_samples):
@@ -49,13 +49,21 @@ class Phoenics(VarDictParser):
 			samples.extend(sampled_values)
 		self.proposed_samples = np.array(samples).transpose()
 
+		# set samples to zero
+		for sample in self.proposed_samples:
+			set_to_zero = self.acq_func_sampler._gen_set_to_zero_vector(sample)
+			sample *= set_to_zero
+
 
 	def _compute_characteristic_distances(self):
 		self.characteristic_distances = np.empty(self.total_size)
 		start_index = 0
 		for var_index, var_name in enumerate(self.var_names):
 			var_dict   = self.param_dict['variables'][var_index][var_name]
-			var_range  = var_dict['high'] - var_dict['low']
+			if 'low' in var_dict:
+				var_range = var_dict['high'] - var_dict['low']
+			else:
+				var_range = len(var_dict['options'])
 			var_ranges = np.zeros(var_dict['size']) + var_range
 			self.characteristic_distances[start_index : start_index + var_dict['size']] = var_ranges 
 			start_index += var_dict['size']
@@ -73,19 +81,19 @@ class Phoenics(VarDictParser):
 
 		# create and sample the model
 		print('# running density estimation')
-		self.network = BayesianNeuralNetwork(self.var_dicts, obs_params, obs_losses, self.param_dict['general']['batch_size'])
+		self.network = BayesianNeuralNetwork(self.var_dicts, obs_params, obs_losses, self.param_dict['general']['batch_size'], backend = self.param_dict['general']['backend'])
 		self.network.create_model()
 		self.network.sample()
 		self.network.build_penalties()
 
 		# sample the acquisition function
 		print('# proposing new samples')
-		self.proposed_samples = self.acq_func_sampler.sample(lowest_params, self.network.penalty_contributions, self.network.lambda_values, parallel = self.param_dict['general']['parallel_evaluations'])
+		self.proposed_samples = self.acq_func_sampler.sample(lowest_params, self.network.penalty_contributions, 
+															 self.network.lambda_values, parallel = self.param_dict['general']['parallel_evaluations'])
 
 
 
 	def choose(self, num_samples = None, observations = None, as_array = False):
-
 		if not num_samples:
 			num_samples = self.param_dict['general']['num_batches']
 
@@ -95,16 +103,13 @@ class Phoenics(VarDictParser):
 			# get the most informative
 			print('# selecting informative samples')
 			self.imp_samples = self.sample_selector.select(num_samples, self.proposed_samples, self.network.penalty_contributions, self.network.lambda_values, self.characteristic_distances)
+			self.imp_samples = np.squeeze(self.imp_samples)
 		else:
 			# generating samples
 			self._generate_uniform(num_samples)
 			# cleaning samples - not required for uniform samples
+#			self.imp_samples = np.squeeze(self.proposed_samples)
 			self.imp_samples = self.proposed_samples
-
-		if len(self.imp_samples.shape) > 2:
-			self.imp_samples = np.squeeze(self.imp_samples)
-		if len(self.imp_samples.shape) == 1:
-			self.imp_samples = np.reshape(self.imp_samples, (len(self.imp_samples), 1))
 
 		# convert sampled parameters to list of dicts
 		self.gen_samples = []
@@ -112,7 +117,11 @@ class Phoenics(VarDictParser):
 			sample_dict = {}
 			lower, upper = 0, self.var_sizes[0]
 			for var_index, var_name in enumerate(self.var_names):
-				sample_dict[var_name] = {'samples': sample[lower:upper]}
+				# we need to translate categories
+				if self.var_types[var_index] == 'categorical':
+					sample_dict[var_name] = {'samples': [self.var_options[var_index][int(np.around(element))] for element in sample[lower:upper]]}
+				else:	
+					sample_dict[var_name] = {'samples': sample[lower:upper]}
 				if var_index == len(self.var_names) - 1:
 					break
 				lower = upper
@@ -123,9 +132,6 @@ class Phoenics(VarDictParser):
 			return self.imp_samples
 		else:
 			return self.gen_samples
-
-
-
 
 
 
@@ -152,9 +158,7 @@ class Phoenics(VarDictParser):
 				value = fun(np.squeeze(sample))
 				x0[sample_index]['loss'] = value
 				result.add(sample, value)
-
-
-		print(x0)
+				
 
 		for num_iter in range(1, max_iter):
 
@@ -182,6 +186,7 @@ class Phoenics(VarDictParser):
 		result.analyze()
 
 		return result
+
 
 #========================================================================
 

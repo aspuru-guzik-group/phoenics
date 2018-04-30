@@ -85,12 +85,15 @@ class SampleSelector(VarDictParser):
 				div_crits = np.ones(len(batch_proposals))
 				if len(new_samples) > 0:	
 					for sample_index, sample in enumerate(batch_proposals):
+#						min_distance = np.amin([np.linalg.norm(sample - x) for x in new_samples])
+#						min_distance = np.amin([np.linalg.norm(sample - x) for x in new_samples], axis = 0)
 						min_distance = np.amin([np.abs(sample - x) for x in new_samples], axis = 0)
-						div_crits[sample_index] = np.amin([1., np.amin(np.exp( 5. * (min_distance - self.characteristic_distances) / self.var_p_ranges))])
+						div_crits[sample_index] = np.amin([1., np.amin(np.exp( 2. * (min_distance - self.characteristic_distances) / self.var_p_ranges))])
 
 				# get reweighted rewards
 				rewards              = getattr(self, 'rewards_%d' % batch_index)
 				reweighted_rewards   = div_crits * rewards
+#				reweighted_rewards   = rewards
 				largest_reward_index = np.argmax(reweighted_rewards)
 				new_sample = batch_proposals[largest_reward_index]
 				new_samples.append(new_sample)
@@ -98,6 +101,9 @@ class SampleSelector(VarDictParser):
 				# update reward of picked sample
 				rewards[largest_reward_index] = 0.
 				setattr(self, 'rewards_%d' % batch_index, rewards)
+
+
+#			quit()
 
 			all_samples.append(np.array(new_samples))
 		all_samples = np.array(all_samples)

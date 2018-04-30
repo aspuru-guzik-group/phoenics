@@ -1,0 +1,11 @@
+{
+	"general": {
+		"num_batches": 1,
+		"batch_size":  1,
+		"backend": "edward",
+		"parallel_evaluations": "True"
+	},
+	"variables": [{"x": {"low": -5.0, "high": 10.0, "type": "float", "size": 1}},
+				  {"y": {"low":  0.0, "high": 15.0, "type": "float", "size": 1}}],
+	"objectives": [{"branin": {"hierarchy": 0, "type": "minimum", "tolerance": 0.0}}]
+}

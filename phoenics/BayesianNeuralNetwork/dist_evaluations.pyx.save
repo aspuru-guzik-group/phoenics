@@ -1,0 +1,190 @@
+#!/usr/bin/env python 
+
+from __future__ import division
+import numpy as np
+# "cimport" is used to import special compile-time information
+# about the numpy module (this is stored in a file numpy.pxd which is
+# currently part of the Cython distribution).
+cimport numpy as np
+
+from libc.math cimport exp 
+
+#============================================================================
+
+cdef class DistEvaluator:
+
+	cdef int num_samples, num_obs, num_dims
+
+	def __init__(self, mus, sds, observed_losses, var_types):
+
+
+
+
+#============================================================================
+
+cdef class DistEvaluator:
+
+	cdef int num_samples, num_obs
+	cdef double sqrt2pi
+#	cdef double [:, :, :] mus, sds
+#	cdef double [:, :, :] sds_square, tau_half, tanh_sds, gauss_prefactor
+	cdef double[:, :, :] mus = np.arange(27, dtype=np.dtype("d")).reshape((3, 3, 3))
+	cdef np.ndarray sds
+	cdef np.ndarray sds_square, tau_half, tanh_sds, gauss_prefactor
+	cdef np.ndarray observed_losses, var_types
+
+#narr = np.arange(27, dtype=np.dtype("i")).reshape((3, 3, 3))
+#cdef int [:, :, :] narr_view = narr
+
+#from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+#cdef class SomeMemory:
+ #   cdef double* data
+ #   def __cinit__(self, size_t number):
+ #       # allocate some memory (uninitialised, may contain arbitrary data)
+ #       self.data = <double*> PyMem_Malloc(number * sizeof(double))
+ #       if not self.data:
+ #           raise MemoryError()
+
+ #   def resize(self, size_t new_number):
+        # Allocates new_number * sizeof(double) bytes,
+        # preserving the current content and making a best-effort to
+        # re-use the original data location.
+ #       mem = <double*> PyMem_Realloc(self.data, new_number * sizeof(double))
+ #       if not mem:
+ #           raise MemoryError()
+        # Only overwrite the pointer if the memory was really reallocated.
+        # On error (mem is NULL), the originally memory has not been freed.
+ #       self.data = mem
+
+#    def __dealloc__(self):
+#        PyMem_Free(self.data)     # no-op if self.data is NULL
+
+
+
+	def __init__(self, int num_samples, mus, sds, observed_losses, var_types):
+		self.num_samples = num_samples
+#		cdef double [:, :, :] self.mus = mus
+#		cdef double [:, :, :] self.sds = sds
+
+		self.observed_losses = observed_losses
+		self.num_obs         = len(self.observed_losses)
+		self.var_types       = var_types
+
+#		print(mus.shape)
+#		self.mus = np.empty(mus.shape)
+#		self.sds = np.empty(sds.shape)
+		self.mus = mus
+		self.sds = sds
+
+		self.sqrt2pi = np.sqrt(2 * np.pi)
+	
+		self.gauss_prefactor = 1. / (self.sqrt2pi * self.sds)
+		self.sds_square      = self.sds**2
+		self.tau_half        = 1. / (2. * self.sds_square)
+		self.tanh_sds        = np.tanh(4. * self.sds_square)
+
+#		self.gauss_prefactor = np.ones(self.mus.shape)
+#		self.sds_square      = np.zeros(self.mus.shape)
+#		self.tau_half        = np.ones(self.mus.shape)
+#		self.tanh_sds        = np.zeros(self.mus.shape)
+
+#		cdef int sample_index, obs_index, dim_index
+#		for sample_index in range(self.mus.shape[0]):
+#			for obs_index in range(self.mus.shape[1]):
+#				for dim_index in range(self.mus.shape[2]):
+#					self.mus[sample_index, obs_index, dim_index] = mus[sample_index, obs_index, dim_index]
+#					self.sds[sample_index, obs_index, dim_index] = sds[sample_index, obs_index, dim_index]
+#					self.gauss_prefactor[sample_index, obs_index, dim_index] = 1. / (self.sqrt2pi * self.sds[sample_index, obs_index, dim_index])
+#					self.sds_square[sample_index, obs_index, dim_index] = self.sds[sample_index, obs_index, dim_index]**2
+#					self.tau_half[sample_index, obs_index, dim_index] = 1. / (2. * self.sds_square[sample_index, obs_index, dim_index])
+#					self.tanh_sds[sample_index, obs_index, dim_index] = np.tanh(4. * self.sds_square[sample_index, obs_index, dim_index])
+
+		# now we pre-compute a few things
+#		self.sds_square = np.square(self.sds)
+#		self.tau_half   = 1. / (2. * self.sds_square)
+#		self.tanh_sds = np.tanh(1. / (4. * self.sds_square))
+
+
+	cdef double _gauss(self, double x, int sample_index, int obs_index, int dim_index):
+		cdef double argument, result
+		argument = (x - self.mus[sample_index, obs_index, dim_index])**2 * self.tau_half[sample_index, obs_index, dim_index]
+		if argument > 4.:
+			result = 0.
+		else:	
+			result = exp( - argument) * self.gauss_prefactor[sample_index, obs_index, dim_index]
+		return result
+
+
+
+	cdef double _discrete_laplace(self, double x, int sample_index, int obs_index, int dim_index):
+		cdef double argument, result
+		x = np.around(x)
+		argument = np.abs(x - self.mus[sample_index, obs_index, dim_index]) * self.tau_half[sample_index, obs_index, dim_index]
+		if argument > 4.:
+			result = 0.
+		else:
+			result = exp( - argument) * self.tanh_sds[sample_index, obs_index, dim_index]
+		return result
+
+
+
+	cdef _probs(self, np.ndarray x):
+		cdef int sample_index, obs_index, dim_index
+		cdef double total_prob
+		cdef np.ndarray probs
+		
+		probs = np.zeros(len(self.observed_losses))
+		for sample_index in range(self.num_samples):
+
+			for obs_index in range(self.num_obs):
+				total_prob = 1.
+				for dim_index in range(self.var_types.shape[0]):
+					if self.var_types[dim_index] == 0:
+						func = self._gauss
+					elif self.var_types[dim_index] == 1:
+						func = self._discrete_laplace
+					total_prob *= func(self, x[dim_index], sample_index, obs_index, dim_index)
+				probs[obs_index] += total_prob
+		
+		for obs_index in range(self.num_obs):
+			probs[obs_index] /= self.num_samples
+
+		return probs
+
+
+
+#	cdef _prob(self, x_1d, int sample_index):
+#		cdef int dim_index, obs_index
+#		total_prob = np.ones(self.num_obs)
+#		for dim_index in range(self.var_types.shape[0]):
+#			if self.var_types[dim_index] == 0:
+#				func = self._gauss
+#			elif self.var_types[dim_index] == 1:
+#				func = self._discrete_laplace
+#			else:
+#				raise NotImplementedError()
+#			for obs_index in range(self.num_obs):
+#				total_prob[obs_index] *= func(self, x_1d[dim_index], sample_index, obs_index, dim_index)
+#		return total_prob
+#	
+#
+#	cdef _probs(self, np.ndarray x):
+#		cdef int sample_index
+#		cdef np.ndarray probs
+#
+#		probs = np.empty(len(self.observed_losses))	
+#		for sample_index in range(self.num_samples):
+#			probs += self._prob(x, sample_index)
+#	
+#		return probs / self.num_samples
+
+#		return np.mean( [self._prob(x, i) for i in range(self.num_samples)], axis = 0)
+	
+
+
+	cpdef get_penalty(self, x):
+#		print('X', x)
+		probs_x = self._probs(x)
+		return np.dot(self.observed_losses, probs_x), np.sum(probs_x)
+
+
