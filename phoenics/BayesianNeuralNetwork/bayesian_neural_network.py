@@ -52,11 +52,11 @@ class BayesianNeuralNetwork(VarDictParser):
 			raise NotImplementedError()
 
 		if self.batch_size == 1:
-			self.lambda_values = [0.]
+			self.lambda_values = np.array([0.])
 		else:
 			self.lambda_values = np.linspace(-0.25, 0.25, self.batch_size)
 			self.lambda_values = self.lambda_values[::-1]
-		self.lambda_values *= 1 / self.volume
+		self.lambda_values *= 1. / self.volume
 		self.sqrt2pi = np.sqrt(2 * np.pi)
 
 

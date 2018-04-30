@@ -102,10 +102,9 @@ class SampleSelector(VarDictParser):
 				rewards[largest_reward_index] = 0.
 				setattr(self, 'rewards_%d' % batch_index, rewards)
 
-
-#			quit()
-
 			all_samples.append(np.array(new_samples))
 		all_samples = np.array(all_samples)
+		if len(all_samples) == 1:
+			all_samples = all_samples[0]
 
 		return all_samples
