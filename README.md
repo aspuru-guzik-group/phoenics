@@ -5,11 +5,16 @@ Phoenics is an open source optimization algorithm combining ideas from Bayesian 
 Check out the `examples` folder for detailed descriptions and code examples for:
 
 | Example | Link | 
-|:---|:---|
+|:--------|:-----|
 | Sequential optimization           |  ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential) |
 | Parallelizable batch optimization |  ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel) |
 | Multi-objective optimization      |  ![examples/optimization_multi_objective](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_multi_objective) | 
 
+More elaborate applications of Phoenics and Chimera are listed below
+
+| Application 						  | Link                   | 
+|:------------------------------------|:-----------------------|
+| Auto-calibration of a virtual robot | ... coming up soon ... | 
 
 ## Installation
 
