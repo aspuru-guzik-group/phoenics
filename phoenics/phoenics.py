@@ -106,12 +106,10 @@ class Phoenics(VarDictParser, ObsDictParser):
 #			self.imp_samples = np.squeeze(self.imp_samples)
 		else:
 			# generating samples
-			self._generate_uniform(num_samples)
+			self._generate_uniform(num_samples * self.param_dict['general']['batch_size'])
 			# cleaning samples - not required for uniform samples
 #			self.imp_samples = np.squeeze(self.proposed_samples)
 			self.imp_samples = self.proposed_samples
-
-		print('IMP SAMPLES', self.imp_samples)
 
 		# convert sampled parameters to list of dicts
 		self.gen_samples = []
@@ -123,7 +121,6 @@ class Phoenics(VarDictParser, ObsDictParser):
 				if self.var_types[var_index] == 'categorical':
 					sample_dict[var_name] = {'samples': [self.var_options[var_index][int(np.around(element))] for element in sample[lower:upper]]}
 				else:	
-					print('SAMPLE', sample)
 					sample_dict[var_name] = {'samples': sample[lower:upper]}
 				if var_index == len(self.var_names) - 1:
 					break

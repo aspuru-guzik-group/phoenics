@@ -33,7 +33,7 @@ This section contains general information about the optimization procedure. You 
 | `backend`              | Probabilistic modeling library to be used. Choose from `"edward"` or `"pymc3"`      | 
 | `parallel_evaluations` | Whether to run local optimizations in parallel (`"True"`) or sequential (`"False"`) | 
 
-**Note**: The parameter sets in one batch are proposed based on different sampling strategies favoring exporative or exploitative behavior to various degrees. 
+**Note**: The parameter sets in one batch are proposed based on different sampling strategies favoring exporative or exploitative behavior to various degrees. For details, see ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel).
 
 
 ##### "variables" 
