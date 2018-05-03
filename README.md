@@ -7,7 +7,7 @@ Check out the `examples` folder for detailed descriptions and code examples for:
 | Example | Link | 
 |:--------|:-----|
 | Sequential optimization           |  ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential)  |
-| Parallelizable batch optimization |  ... coming up soon ...  |
+| Parallelizable batch optimization |  ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel)  |
 | Multi-objective optimization      |  ... coming up soon ...  | 
 | Periodic parameter support        |  ... coming up soon ...  | 
 
