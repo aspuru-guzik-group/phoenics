@@ -61,11 +61,11 @@ We can then create a loop in which we query our Phoenics instance for new parame
 ```python
 observations = []
 for num_iter in range(max_iter):
+	
+    # query for new parameters
+    params = phoenics.choose(observations = observations)
     
- 	# query for new parameters
-  	params = phoenics.choose(observations = observations)
-    
-  	# evaluate the proposed parameters
+    # evaluate the proposed parameters
     for param in params:
      	observation = merit_function(param)
         observations.append(observation)
