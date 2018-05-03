@@ -53,22 +53,22 @@ To start a new optimization procedure, we first need to initialize a Phoenics in
 
 ```python
 from phoenics import Phoenics
-    phoenics = Phoenics('config.json')
+phoenics = Phoenics('config.json')
 ```
 
 We can then create a loop in which we query our Phoenics instance for new parameters, evaluate the objective value for the proposed parameters, and store the observations for future queries
 
 ```python
 observations = []
-    for num_iter in range(max_iter):
+for num_iter in range(max_iter):
     
-    	# query for new parameters
-    	params = phoenics.choose(observations = observations)
+ 	# query for new parameters
+  	params = phoenics.choose(observations = observations)
     
-    	# evaluate the proposed parameters
-        for param in params:
-        	observation = merit_function(param)
-            observations.append(observation)
+  	# evaluate the proposed parameters
+    for param in params:
+     	observation = merit_function(param)
+        observations.append(observation)
 ```
 
 This general procedure is outlined in `optimize_branin.py`, where we additionally log the proposed parameters and associated objective values at each iteration of the optimization procedure. 
