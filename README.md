@@ -1,25 +1,78 @@
 # Phoenics
 
-Phoenics is an open source optimization algorithm combining ideas from Bayesian optimization with Bayesian Kernel Density estimation [1]. It performs global optimization on expensive to evaluate objectives, such as physical experiments or demanding computations. Phoenics supports sequential and batch optimizations and allows for the simultaneous optimization of multiple objectives [2].
+Phoenics is an open source optimization algorithm combining ideas from Bayesian optimization with Bayesian Kernel Density estimation [1]. It performs global optimization on expensive to evaluate objectives, such as physical experiments or demanding computations. Phoenics supports sequential and batch optimizations and allows for the simultaneous optimization of multiple objectives via the Chimera scalarizing function [2].
+
+Check out the `examples` folder for detailed descriptions and code examples for:
+* sequential optimization ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential)
+* parallelizable batch optimization ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel)
+* multi-objective optimization ![examples/optimization_multi_objective](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_multi_objective)
 
 
 ## Installation
 
-Phoenics can be installed using pip. 
+You can install Phoenics via pip
 
 ```
 	apt-get install python-pip
 	pip install phoenics
 ```
 
-You can also choose to build Phoenics from source by cloning this repository
+or by creating a conda environment from the provided environment file
+
+```
+	conda env create -f environment.yml
+    source activate phoenics
+```
+
+Alternatively, you can also choose to build Phoenics from source by cloning this repository
 
 ```
 	git clone https://github.com/aspuru-guzik-group/phoenics.git
 ```
 
+##### Requirements
+
+This code has been tested with Python 3.6 and uses
+* cython 0.27.3
+* json 2.0.9
+* numpy 1.13.1
+* scipy 0.19.1
+
+Phoenics can construct its probabilistic model with two different probabilistic modeling libraries: PyMC3 and Edward. Depending on your preferences, you will either need 
+* pymc3 3.2
+* theano 1.0.1
+
+or 
+* edward 1.3.5
+* tensorflow 1.4.1
+
+Check out the `environment.yml` file for more details. 
+
+
+
+
+### Using Phoenics
+
+Phoenics is designed to suggest new parameter points based on prior observations. The suggested parameters can then be passed on to objective evaluations (experiments or involved computation). As soon as the objective values have been determined for a set of parameters, these new observations can again be passed on to Phoenics to request new, more informative parameters.
+
+```python
+	from phoenics import Phoenics
+    
+    # create an instance from a configuration file
+    config_file = 'config.json'
+    phoenics    = Phoenics(config_file)
+    
+    # request new parameters from a set of observations
+    params      = phoenics.choose(observations = observations)
+```
+Detailed examples for specific applications are presented in the `examples` folder. 
+
+
+### Disclaimer
 
 Note: This repository is under construction! We hope to add futther details on the method, instructions and more examples in the near future. 
+
+
 
 ### References
 
