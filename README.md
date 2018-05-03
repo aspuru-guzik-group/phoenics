@@ -67,7 +67,7 @@ Check out the `environment.yml` file for more details.
 Phoenics is designed to suggest new parameter points based on prior observations. The suggested parameters can then be passed on to objective evaluations (experiments or involved computation). As soon as the objective values have been determined for a set of parameters, these new observations can again be passed on to Phoenics to request new, more informative parameters.
 
 ```python
-	from phoenics import Phoenics
+from phoenics import Phoenics
     
     # create an instance from a configuration file
     config_file = 'config.json'
