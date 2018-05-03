@@ -6,15 +6,18 @@ Check out the `examples` folder for detailed descriptions and code examples for:
 
 | Example | Link | 
 |:--------|:-----|
-| Sequential optimization           |  ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential) |
-| Parallelizable batch optimization |  ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel) |
-| Multi-objective optimization      |  ![examples/optimization_multi_objective](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_multi_objective) | 
+| Sequential optimization           |  ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential)  |
+| Parallelizable batch optimization |  ... coming up soon ...  |
+| Multi-objective optimization      |  ... coming up soon ...  | 
+| Periodic parameter support        |  ... coming up soon ...  | 
 
 More elaborate applications of Phoenics and Chimera are listed below
 
 | Application 						  | Link                   | 
 |:------------------------------------|:-----------------------|
 | Auto-calibration of a virtual robot | ... coming up soon ... | 
+
+
 
 ## Installation
 

@@ -243,7 +243,7 @@ class SingleModel(object):
 							average_changes = np.abs(np.mean(changes))
 							std_changes     = np.std(changes)
 							print('EVALUATION', len(valid_errors) - last_save_index, average_changes, std_changes)
-							if average_changes < 10**-3 and std_changes < 10**-2:
+							if (average_changes < 10**-3 and std_changes < 10**-2) or len(valid_errors) - last_save_index > 100:
 								break
 
 						if plot:
