@@ -18,7 +18,7 @@ class OptimizationManager(object):
 		self.loss_function = loss_function 
 
 
-	def optimize(self, max_iter = 10):
+	def optimize(self, max_iter = 100):
 
 		observations = []
 
@@ -26,6 +26,7 @@ class OptimizationManager(object):
 
 			# query for new parameters based on prior observations
 			params = self.phoenics.choose(observations = observations)
+			print('LEN_PARAMS', len(params))
 
 			# use parameters for evaluation ...
 			# ... experimentally or computationally
@@ -45,7 +46,7 @@ class OptimizationManager(object):
 						new_line += '%.5e\t' % (param[var_name]['samples'])
 				for obj_name in sorted(self.phoenics.loss_names):
 					new_line += '%.5e\t' % (param[obj_name])
-			logfile.write(new_line + '\n')
+				logfile.write(new_line + '\n')
 			logfile.close()
 
 #========================================================================
