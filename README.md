@@ -67,7 +67,7 @@ Check out the `environment.yml` file for more details.
 
 
 
-### Using Phoenics
+# Using Phoenics
 
 Phoenics is designed to suggest new parameter points based on prior observations. The suggested parameters can then be passed on to objective evaluations (experiments or involved computation). As soon as the objective values have been determined for a set of parameters, these new observations can again be passed on to Phoenics to request new, more informative parameters.
 
@@ -83,6 +83,27 @@ params      = phoenics.choose(observations = observations)
 ```
 Detailed examples for specific applications are presented in the `examples` folder. 
 
+
+# Using Chimera
+
+Chimera is integrated into Phoenics, but also available as a stand-alone wrapper for other single-objective optimization algorithms. The Chimera wrapper allows to cast a set of objectives for a number of observations into a single objective value for each observation, enabling single-objective optimization algorithms to solve the multi-objective optimization problem. The usage of Chimera is outlined below on an example with four objective functions
+
+```python
+from chimera import Chimera
+
+# define tolerances in descending order of importance
+tolerances = [0.25, 0.1, 0.25, 0.05]
+
+# create Chimera instance
+chimera = Chimera(tolerances)
+
+# cast objectives of shape      [num_observations, num_objectives]
+# into single objective vector  [num_observations, 1]
+single_objectives = chimera.scalarize_objectives(objectives)
+
+```
+
+**Note**: Phoenics automatically employs Chimera when the configuration contains more than one objective.
 
 ### Disclaimer
 

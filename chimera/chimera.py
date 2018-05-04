@@ -84,7 +84,7 @@ class Chimera(object):
 		self.loss = loss
 
 
-	def rescale_losses(self, losses):
+	def scalarize_objectives(self, losses):
 		for index in range(losses.shape[1]):
 			min_loss, max_loss = np.amin(losses[:, index]), np.amax(losses[:, index])
 			losses[:, index] = (losses[:, index] - min_loss) / (max_loss - min_loss)
@@ -141,7 +141,7 @@ if __name__ == '__main__':
 	loss_2 = (loss_2 - np.amin(loss_2)) / (np.amax(loss_2) - np.amin(loss_2))
 	losses = np.array([loss_0, loss_1, loss_2])
 
-	scaled = chimera.rescale_losses(losses.transpose())
+	scaled = chimera.scalarize_objectives(losses.transpose())
 
 
 	for index in range(len(losses)):
