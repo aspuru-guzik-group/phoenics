@@ -9,7 +9,7 @@ Check out the `examples` folder for detailed descriptions and code examples for:
 | Sequential optimization           |  ![examples/optimization_sequential](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_sequential)  |
 | Parallelizable batch optimization |  ![examples/optimization_parallel](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_parallel)  |
 | Periodic parameter support        |  ![examples/optimization_periodic_parameters](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_periodic_parameters)  | 
-| Multi-objective optimization      |  ... coming up soon ...  | 
+| Multi-objective optimization      |  ![examples/optimization_multiple)objectives](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/optimization_multiple_objectives)  | 
 
 More elaborate applications of Phoenics and Chimera are listed below
 
