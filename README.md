@@ -21,7 +21,7 @@ More elaborate applications of Phoenics and Chimera are listed below
 
 # Chimera
 
-Chimera is a general purpose achievement scalarizing function for multi-objective optimization. User preferences regarding the objectives are expected in terms of an importance hierarchy, as well as relative tolerances on each objective indicating what level of degradation is acceptable. Chimera is integrated into Phoenics, but also available for download as a wrapper for other optimization methods (see ![chimera](https://github.com/aspuru-guzik-group/phoenics/tree/master/chimera))
+Chimera is a general purpose achievement scalarizing function for multi-objective optimization. User preferences regarding the objectives are expected in terms of an importance hierarchy, as well as relative tolerances on each objective indicating what level of degradation is acceptable. Chimera is integrated into Phoenics, but also available for download as a wrapper for other optimization methods (see ![chimera](https://github.com/aspuru-guzik-group/phoenics/tree/master/chimera)).
 
 
 # Installation
@@ -29,21 +29,21 @@ Chimera is a general purpose achievement scalarizing function for multi-objectiv
 You can install Phoenics via pip
 
 ```
-	apt-get install python-pip
-	pip install phoenics
+apt-get install python-pip
+pip install phoenics
 ```
 
 or by creating a conda environment from the provided environment file
 
 ```
-	conda env create -f environment.yml
-    source activate phoenics
+conda env create -f environment.yml
+source activate phoenics
 ```
 
 Alternatively, you can also choose to build Phoenics from source by cloning this repository
 
 ```
-	git clone https://github.com/aspuru-guzik-group/phoenics.git
+git clone https://github.com/aspuru-guzik-group/phoenics.git
 ```
 
 ##### Requirements
@@ -74,12 +74,12 @@ Phoenics is designed to suggest new parameter points based on prior observations
 ```python
 from phoenics import Phoenics
     
-    # create an instance from a configuration file
-    config_file = 'config.json'
-    phoenics    = Phoenics(config_file)
+# create an instance from a configuration file
+config_file = 'config.json'
+phoenics    = Phoenics(config_file)
     
-    # request new parameters from a set of observations
-    params      = phoenics.choose(observations = observations)
+# request new parameters from a set of observations
+params      = phoenics.choose(observations = observations)
 ```
 Detailed examples for specific applications are presented in the `examples` folder. 
 
