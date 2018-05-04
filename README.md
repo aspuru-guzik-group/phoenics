@@ -24,7 +24,7 @@ More elaborate applications of Phoenics and Chimera are listed below
 Chimera is a general purpose achievement scalarizing function for multi-objective optimization. User preferences regarding the objectives are expected in terms of an importance hierarchy, as well as relative tolerances on each objective indicating what level of degradation is acceptable. Chimera is integrated into Phoenics, but also available for download as a wrapper for other optimization methods (see ![chimera](https://github.com/aspuru-guzik-group/phoenics/tree/master/chimera))
 
 
-## Installation
+# Installation
 
 You can install Phoenics via pip
 
