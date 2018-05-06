@@ -1,0 +1,17 @@
+{
+	"general": {
+		"num_batches": 1,
+		"batch_size":  2,
+		"backend": "pymc3",
+		"parallel_evaluations": "True"
+	},
+	"variables": [{"param0": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}},
+				  {"param1": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}},
+				  {"param2": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}},
+				  {"param3": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}},
+				  {"param4": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}},
+				  {"param5": {"low": 0.0, "high": 1.0, "type": "float", "size": 1}}],
+	"objectives": [{"peak_area":      {"hierarchy": 0, "type": "minimum", "tolerance": 0.2}}, 
+				   {"sample":         {"hierarchy": 1, "type": "minimum", "tolerance": 0.2}}, 
+				   {"execution_time": {"hierarchy": 2, "type": "minimum", "tolerance": 0.2}}]
+}

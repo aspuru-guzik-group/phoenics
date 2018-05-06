@@ -272,6 +272,9 @@ class SingleModel(object):
 
 
 	def restore(self, model_path):
+		if not self.is_graph_constructed: 
+			self.construct_graph()
+			self._construct_inference()
 
 		self.sess  = tf.Session(graph = self.graph)
 		self.saver = tf.train.Saver()
@@ -285,7 +288,7 @@ class SingleModel(object):
 		input_scaled = self.get_scaled_features(input_raw)
 
 		with self.sess.as_default():
-			output_scaled = self.y_post.sample(self.NUM_SAMPLES).eval(feed_dict = {self.x_ph: input_scaled})
+			output_scaled = self.y_post.sample(self.NUM_SAMPLES).eval(feed_dict = {self.x_ph: input_scaled, self.is_training: False})
 
 		output_raw      = self.get_raw_targets(output_scaled)
 		output_raw_mean = np.mean(output_raw, axis = 0)

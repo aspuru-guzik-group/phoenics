@@ -20,7 +20,7 @@ class Model(object):
 
 	def __init__(self, data_file, index_file, model_path, plot = False):
 	
-		plot = True
+		self.models_are_loaded = False
 		self.model_path = model_path
 		self.plot       = plot
 
@@ -39,8 +39,6 @@ class Model(object):
 
 
 	def _assemble_training_sets(self):
-
-		print(self.dataset.keys())
 
 		params  = self.dataset['parameters']
 		areas   = self.dataset['peak_area']
@@ -92,7 +90,6 @@ class Model(object):
 				self.models.append(single_model)
 
 	def set_hyperparameters(self, hyperparam_dict):
-		print('HYPER_PARAMS', hyperparam_dict)
 		for model in self.models:
 			model.set_hyperparameters(hyperparam_dict)
 
@@ -111,6 +108,7 @@ class Model(object):
 				single_model = SingleModel(self.graphs[fold_index], self.dataset_details, scope = 'fold_%d' % fold_index, batch_size = batch_size)
 				single_model.restore('%s/Fold_%d/model.ckpt' % (self.model_path, fold_index))
 				self.models.append(single_model)
+		self.models_are_loaded = True
 
 
 
@@ -123,7 +121,8 @@ class Model(object):
 
 	def predict(self, features):
 
-		self._load_models(batch_size = len(features))
+		if not self.models_are_loaded: self._load_models(batch_size = len(features))
+
 		pred_dict = {'samples': [], 'averages': [], 'uncertainties': []}
 
 		for fold_index in range(NUM_FOLDS):

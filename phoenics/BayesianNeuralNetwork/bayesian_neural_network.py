@@ -19,7 +19,7 @@ from BayesianNeuralNetwork.dist_evaluations import DistEvaluator
 
 class BayesianNeuralNetwork(VarDictParser):
 
-	MODEL_DETAILS = {'burnin': 10**2, 'thinning': 10, 'num_epochs': 5 * 10**4, 'num_draws': 10**4, 'learning_rate': 0.1,
+	MODEL_DETAILS = {'burnin': 10**2, 'thinning': 20, 'num_epochs': 5 * 10**4, 'num_draws': 10**4, 'learning_rate': 0.1,
 					 'num_layers': 3, 'hidden_shape': 6,
 					 'weight_loc': 0., 'weight_scale': 1., 'bias_loc': 0., 'bias_scale': 1.}
 
@@ -71,8 +71,6 @@ class BayesianNeuralNetwork(VarDictParser):
 
 
 	def build_penalties(self):
-
-		print('LENGTH', len(self.network.trace['loc']))
 
 		trace_mus_float = self.network.trace['loc'][self.model_details['burnin']::self.model_details['thinning']].copy()
 		trace_sds_float = self.network.trace['scale'][self.model_details['burnin']::self.model_details['thinning']].copy()
