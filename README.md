@@ -15,7 +15,7 @@ More elaborate applications of Phoenics and Chimera are listed below
 
 | Application 						  | Link                   | 
 |:------------------------------------|:-----------------------|
-| Auto-calibration of a virtual robot | ... coming up soon ... | 
+| Auto-calibration of a virtual robot | ![examples/application_robot_calibration](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/application_robot_calibration) | 
 
 
 
