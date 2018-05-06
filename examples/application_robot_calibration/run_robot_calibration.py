@@ -26,7 +26,6 @@ class OptimizationManager(object):
 
 			# query for new parameters based on prior observations
 			params = self.phoenics.choose(observations = observations)
-			print('LEN_PARAMS', len(params))
 
 			# use parameters for evaluation ...
 			# ... experimentally or computationally
