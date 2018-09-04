@@ -24,8 +24,12 @@ if __name__ == '__main__':
 	Z = np.zeros((len(domain_x), len(domain_y)))
 	for x_index, x in enumerate(domain_x):
 		for y_index, y in enumerate(domain_y):
-			Z[x_index, y_index] = branin(x, y)
+			param_dict = {'x': {'samples': [x]}, 'y': {'samples': [y]}}
+			Z[x_index, y_index] = branin(param_dict)['branin']
 
 	levels = np.linspace(np.amin(Z), np.amax(Z), 250)
 	plt.contourf(Y, X, Z, cmap = cm.RdGy, levels = levels)
+	plt.xlabel('x')
+	plt.ylabel('y')
+	plt.title('Branin optimiation')
 	plt.show()
