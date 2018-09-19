@@ -109,7 +109,9 @@ single_objectives = chimera.scalarize_objectives(objectives)
 
 Note: This repository is under construction! We hope to add futther details on the method, instructions and more examples in the near future. 
 
+### Experiencing problems? 
 
+Please create a ![new issue](https://github.com/aspuru-guzik-group/phoenics/issues/new/choose) and describe your problem in detail so we can fix it.
 
 ### References
 
