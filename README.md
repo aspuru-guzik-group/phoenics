@@ -21,7 +21,7 @@ More elaborate applications of Phoenics and Chimera are listed below
 
 # Chimera
 
-Chimera is a general purpose achievement scalarizing function for multi-objective optimization. User preferences regarding the objectives are expected in terms of an importance hierarchy, as well as relative tolerances on each objective indicating what level of degradation is acceptable. Chimera is integrated into Phoenics, but also available for download as a wrapper for other optimization methods (see ![chimera](https://github.com/aspuru-guzik-group/phoenics/tree/master/chimera)).
+Chimera is a general purpose achievement scalarizing function for multi-objective optimization. User preferences regarding the objectives are expected in terms of an importance hierarchy, as well as relative tolerances on each objective indicating what level of degradation is acceptable. Chimera is integrated into Phoenics, but also available for download as a wrapper for other optimization methods (see [chimera](https://github.com/aspuru-guzik-group/phoenics/tree/master/chimera)).
 
 
 # Installation
@@ -107,7 +107,7 @@ single_objectives = chimera.scalarize_objectives(objectives)
 
 ### Disclaimer
 
-Note: This repository is under construction! We hope to add futther details on the method, instructions and more examples in the near future. 
+Note: This repository is under construction! We hope to add further details on the method, instructions and more examples in the near future. 
 
 ### Experiencing problems? 
 
@@ -115,5 +115,5 @@ Please create a [new issue](https://github.com/aspuru-guzik-group/phoenics/issue
 
 ### References
 
-[1] Häse, F., Roch, L. M., Kreisbeck, C., & Aspuru-Guzik, A. (2018). Phoenics: A universal deep Bayesian optimizer. arXiv preprint [arXiv:1801.01469](https://arxiv.org/abs/1801.01469).  
-[2] Häse, F., Roch, L. M., & Aspuru-Guzik, A. (2018). Chimera: enabling hierarchy based multi-objective optimization for self-driving laboratories. chemRxiv preprint [10.26434/chemrxiv.6195176.v1](https://chemrxiv.org/articles/Chimera_Enabling_Hierarchy_Based_Multi-Objective_Optimization_for_Self-Driving_Laboratories/6195176).
+[1] Häse, F., Roch, L. M., Kreisbeck, C., & Aspuru-Guzik, A. (2018). [Phoenics: A Bayesian Optimizer for Chemistry.](https://pubs.acs.org/doi/abs/10.1021/acscentsci.8b00307) ACS central science 4.6 (2018): 1134-1145.
+[2] Häse, F., Roch, L. M., & Aspuru-Guzik, A. (2018). [Chimera: enabling hierarchy based multi-objective optimization for self-driving laboratories.](https://pubs.rsc.org/en/content/articlehtml/2018/sc/c8sc02239a) Chemical Science (2018).
