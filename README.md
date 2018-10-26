@@ -116,4 +116,5 @@ Please create a [new issue](https://github.com/aspuru-guzik-group/phoenics/issue
 ### References
 
 [1] Häse, F., Roch, L. M., Kreisbeck, C., & Aspuru-Guzik, A. (2018). [Phoenics: A Bayesian Optimizer for Chemistry.](https://pubs.acs.org/doi/abs/10.1021/acscentsci.8b00307) ACS central science 4.6 (2018): 1134-1145.
+
 [2] Häse, F., Roch, L. M., & Aspuru-Guzik, A. (2018). [Chimera: enabling hierarchy based multi-objective optimization for self-driving laboratories.](https://pubs.rsc.org/en/content/articlehtml/2018/sc/c8sc02239a) Chemical Science (2018).
