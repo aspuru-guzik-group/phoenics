@@ -14,3 +14,5 @@ More elaborate applications of Phoenics and Chimera are listed below
 | Application 						  | Link                   | 
 |:------------------------------------|:-----------------------|
 | Auto-calibration of a virtual robot | [application_virtual_robot_calibration](https://github.com/aspuru-guzik-group/phoenics/tree/master/examples/application_robot_calibration) | 
+
+Python implementations of the analytical benchmark functions reported in the paper are provided [benchmark_functions.py](https://github.com/aspuru-guzik-group/phoenics/blob/master/examples/benchmark_functions.py)
