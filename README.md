@@ -1,5 +1,7 @@
 # Phoenics
 
+[https://img.shields.io/github/issues-raw/aspuru-guzik-group/phoenics.svg?style=flat](https://img.shields.io/github/issues-raw/aspuru-guzik-group/phoenics.svg?style=flat)
+
 Phoenics is an open source optimization algorithm combining ideas from Bayesian optimization with Bayesian Kernel Density estimation [1]. It performs global optimization on expensive to evaluate objectives, such as physical experiments or demanding computations. Phoenics supports sequential and batch optimizations and allows for the simultaneous optimization of multiple objectives via the Chimera scalarizing function [2].
 
 Check out the `examples` folder for detailed descriptions and code examples for:
